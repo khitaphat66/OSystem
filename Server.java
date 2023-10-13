@@ -13,6 +13,9 @@ public class Server {
     private final int port = 5152;
     private final int portChannel = 5157;
     private final File[] fileList;
+    String[] filename = new String[10000];
+    String namefile = "";
+    String filePath = "";
 
     public Server() {
         fileList = new File(folder).listFiles(File::isFile);
@@ -48,6 +51,7 @@ public class Server {
         private final DataOutputStream toClient;
         private final SocketChannel socketChannel;
         private final File[] fileList;
+        
 
         public ClientHandle(Socket socketClient, DataInputStream fromClient, DataOutputStream toClient,
                 SocketChannel socketChannel, int clientNo, File[] fileList) {
@@ -67,17 +71,26 @@ public class Server {
                 while (true) {
                     int index = fromClient.readInt();
                     String type = fromClient.readUTF();
-                    String filePath = fileList[index].getAbsolutePath();
                     
+                    for (int i = 0; i < fileList.length; ++i) {
+                        if ((fileList[index].getName()).equalsIgnoreCase(filename[i])) {
+                            filePath = folder + filename[i];
+                            namefile = filename[i];
+                            //System.out.println(namefile);
+                            System.out.println("[ SERVER ] Send File List ");
+                            check = true;      
+                        }     
+                    }
                     long size = fileList[index].length();
                     toClient.writeLong(size);
-                    System.out.println("Client " + clientNo + "need to " + (!type.equals("1") ? "zero " : "")
+                    System.out.println("Client " + clientNo + " need to " + (!type.equals("1") ? "zero " : "")
                             + "copy file :" + fileList[index].getName());
                     if (type.equals("1")) {
                         copy(filePath, size);
                     } else if (type.equals("2")) {
                         zeroCopy(filePath, size);
                     }
+                    
                     long timeElaspe = fromClient.readLong();
                     System.out.println("Time : " + timeElaspe + " ms\n");
                 }
@@ -89,7 +102,11 @@ public class Server {
         public final void sendFileList() {
             try {
                 for (File file : fileList) {
+                    
                     toClient.writeUTF(file.getName());
+                }
+                for (int i = 0; i < fileList.length; i++) {
+                     filename[i]=fileList[i].getName();
                 }
                 toClient.writeUTF("/EOF");
                 toClient.flush();
@@ -109,7 +126,7 @@ public class Server {
                     toClient.write(buffer, 0, read);
                     currentRead += read;
                 }
-                System.out.println("Send File:  copy file  Successful!!");
+                System.out.println("Send File:" +namefile+" copy file  Successful!!");
             } catch (IOException e) {
             } finally {
                 try {
@@ -132,7 +149,7 @@ public class Server {
                         && (read = source.transferTo(currentRead, size - currentRead, socketChannel)) != -1) {
                     currentRead += read;
                 }
-                System.out.println("Send File: zero copy Successful!!");
+                System.out.println("Send File: " +namefile+" zero copy Successful!!");
             } catch (IOException e) {
             } finally {
                 try {
