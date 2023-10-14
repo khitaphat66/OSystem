@@ -10,8 +10,8 @@ public class Server {
     private ServerSocketChannel serverChannel;
     private final String folder = "D:/Server/";
     private final String IpAddress = "192.168.43.152"; //192.168.56.1
-    private final int port = 5152;
-    private final int portChannel = 5157;
+    private final int port = 5001;
+    private final int portChannel = 5005;
     private final File[] fileList;
     String[] filename = new String[10000];
     String namefile = "";
@@ -77,7 +77,7 @@ public class Server {
                             filePath = folder + filename[i];
                             namefile = filename[i];
                             //System.out.println(namefile);
-                            System.out.println("[ SERVER ] Send File List ");
+                            System.out.println("SERVER  Send File List ");
                             check = true;      
                         }     
                     }
@@ -86,13 +86,12 @@ public class Server {
                     System.out.println("Client " + clientNo + " need to " + (!type.equals("1") ? "zero " : "")
                             + "copy file :" + fileList[index].getName());
                     if (type.equals("1")) {
-                        copy(filePath, size);
+                        copy(filePath, size);    
                     } else if (type.equals("2")) {
-                        zeroCopy(filePath, size);
+                        zeroCopy(filePath, size);  
                     }
                     
-                    long timeElaspe = fromClient.readLong();
-                    System.out.println("Time : " + timeElaspe + " ms\n");
+                    
                 }
             } catch (IOException ex) {
                 System.out.println("Client " + clientNo + " is disconnected");
@@ -127,6 +126,8 @@ public class Server {
                     currentRead += read;
                 }
                 System.out.println("Send File:" +namefile+" copy file  Successful!!");
+                long timeElaspe = fromClient.readLong();
+                System.out.println("Time : " + timeElaspe + " ms\n");
             } catch (IOException e) {
             } finally {
                 try {
@@ -150,6 +151,8 @@ public class Server {
                     currentRead += read;
                 }
                 System.out.println("Send File: " +namefile+" zero copy Successful!!");
+                long timeElaspe = fromClient.readLong();
+                System.out.println("Time : " + timeElaspe + " ms\n");
             } catch (IOException e) {
             } finally {
                 try {
