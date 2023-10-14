@@ -12,9 +12,9 @@ public class Client {
     private SocketChannel socketChannel;
     private final String foldercopy = "D:/OS/Client/Copy/";  //<<<<<<<<<<<<<<<<<<<<<<<<
     private final String folderzero = "D:/OS/Client/Zero/";  //<<<<<<<<<<<<<<<<<<<<<<<<
-    private final String IpAddress = "192.168.43.152"; //192.168.56.1
-    private final int port = 5152;
-    private final int portChannel = 5157;
+    private final String IpAddress = "10.0.0.90"; //192.168.56.1
+    private final int port = 5001;
+    private final int portChannel = 5005;
     private String[] fileList;
 
     public Client() {
@@ -58,7 +58,7 @@ public class Client {
 
     public final void printFile() {
         for (int i = 0; i < fileList.length; i++) {
-            System.out.println(" [" + (i + 1) + "] " + fileList[i]);
+            System.out.println(" [" + (i+1) + "] " + fileList[i]);
         }
     }
 
